@@ -5,8 +5,8 @@
 #t/* SVC_IRQn interrupt configuration */
 #tNVIC_SetPriority(SVC_IRQn, 0);
 #t/* PendSV_IRQn interrupt configuration */
-#tNVIC_SetPriority(PendSV_IRQn, 0);
+#tNVIC_SetPriority(PendSV_IRQn, 3);
 #t/* SysTick_IRQn interrupt configuration */
-#tNVIC_SetPriority(SysTick_IRQn, 0);
+#tNVIC_SetPriority(SysTick_IRQn, 3);
 #n
 #n
