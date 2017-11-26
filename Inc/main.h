@@ -57,6 +57,25 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define CATH0_Pin GPIO_PIN_8
+#define CATH0_GPIO_Port GPIOA
+#define CATH1_Pin GPIO_PIN_9
+#define CATH1_GPIO_Port GPIOA
+#define CATH2_Pin GPIO_PIN_10
+#define CATH2_GPIO_Port GPIOA
+#define CATH3_Pin GPIO_PIN_11
+#define CATH3_GPIO_Port GPIOA
+#define ANODE2_Pin GPIO_PIN_12
+#define ANODE2_GPIO_Port GPIOA
+#define CATH4_Pin GPIO_PIN_15
+#define CATH4_GPIO_Port GPIOA
+#define CATH5_Pin GPIO_PIN_3
+#define CATH5_GPIO_Port GPIOB
+#define ANODE1_Pin GPIO_PIN_4
+#define ANODE1_GPIO_Port GPIOB
+#define ANODE0_Pin GPIO_PIN_5
+#define ANODE0_GPIO_Port GPIOB
+
 /* ########################## Assert Selection ############################## */
 /**
   * @brief Uncomment the line below to expanse the "assert_param" macro in the 
