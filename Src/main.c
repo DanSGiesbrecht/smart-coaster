@@ -65,6 +65,8 @@ osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+osThreadId ledTaskHandle;
+
 
 /* USER CODE END PV */
 
@@ -118,21 +120,9 @@ int main(void)
   MX_TIM2_Init();
 
   /* USER CODE BEGIN 2 */
-  /*
-  HAL_GPIO_WritePin(GPIOB, ANODE1_Pin, GPIO_PIN_RESET);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 255);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 255);
-  //__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 256);
-   */
   LED_Init( &htim1, &htim2 );
-  LED_SetColor( 0x663399, LED6 );
-  LED_SetPWM( 1 );
+  LED_SetColor( 0xff0000, LED6 );
+  //LED_SetPWM( 1 );
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -155,6 +145,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //xTaskCreate( LED_RefreshMatrixTask, "Task 1", 1000, NULL, 1, NULL );
+  osThreadDef( ledTask, LED_RefreshMatrixTask, osPriorityAboveNormal, 0, 128 );
+  ledTaskHandle = osThreadCreate( osThread( ledTask ), NULL );
+
+
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
