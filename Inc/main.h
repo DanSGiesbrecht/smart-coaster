@@ -57,6 +57,8 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define ANODE3_Pin GPIO_PIN_2
+#define ANODE3_GPIO_Port GPIOB
 #define CATH0_Pin GPIO_PIN_8
 #define CATH0_GPIO_Port GPIOA
 #define CATH1_Pin GPIO_PIN_9

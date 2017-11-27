@@ -6,24 +6,24 @@ static void MX_GPIO_Init(void)
 #n
 #tGPIO_InitTypeDef GPIO_InitStruct;
 #n#t/* GPIO Ports Clock Enable */
-#t__HAL_RCC_GPIOA_CLK_ENABLE();
 #t__HAL_RCC_GPIOB_CLK_ENABLE();
+#t__HAL_RCC_GPIOA_CLK_ENABLE();
+#n#t/*Configure GPIO pin Output Level */
+#tHAL_GPIO_WritePin(GPIOB, ANODE3_Pin|ANODE1_Pin|ANODE0_Pin, GPIO_PIN_RESET);
 #n#t/*Configure GPIO pin Output Level */
 #tHAL_GPIO_WritePin(ANODE2_GPIO_Port, ANODE2_Pin, GPIO_PIN_RESET);
-#n#t/*Configure GPIO pin Output Level */
-#tHAL_GPIO_WritePin(GPIOB, ANODE1_Pin|ANODE0_Pin, GPIO_PIN_RESET);
+#n#t/*Configure GPIO pins : ANODE3_Pin ANODE1_Pin ANODE0_Pin */
+#tGPIO_InitStruct.Pin = ANODE3_Pin|ANODE1_Pin|ANODE0_Pin;
+#tGPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+#tGPIO_InitStruct.Pull = GPIO_NOPULL;
+#tGPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+#tHAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 #n#t/*Configure GPIO pin : ANODE2_Pin */
 #tGPIO_InitStruct.Pin = ANODE2_Pin;
 #tGPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 #tGPIO_InitStruct.Pull = GPIO_NOPULL;
 #tGPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 #tHAL_GPIO_Init(ANODE2_GPIO_Port, &GPIO_InitStruct);
-#n#t/*Configure GPIO pins : ANODE1_Pin ANODE0_Pin */
-#tGPIO_InitStruct.Pin = ANODE1_Pin|ANODE0_Pin;
-#tGPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-#tGPIO_InitStruct.Pull = GPIO_NOPULL;
-#tGPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-#tHAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 #n
 }
 #n
