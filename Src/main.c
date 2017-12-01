@@ -121,8 +121,13 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   LED_Init( &htim1, &htim2 );
-  LED_SetColor( 0xff0000, LED6 );
-  //LED_SetPWM( 1 );
+  LED_SetColor( 0xff0000, LED2 );
+  LED_SetColor( 0xffb600, LED3 );
+  LED_SetColor( 0xffff00, LED4 );
+  LED_SetColor( 0x00ff00, LED5 );
+  LED_SetColor( 0x00ffff, LED6 );
+  LED_SetColor( 0xff00ff, LED7 );
+
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */

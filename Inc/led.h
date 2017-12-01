@@ -21,13 +21,29 @@ typedef enum
 } led_number;
 
 
-
+/*
+ * LED_Init:
+ *
+ * Set up LED_rgb_array to be empty.
+ * Set LED anodes to be off.
+ * Start the six PWM channels.
+ */
 void LED_Init();
 
+/*
+ * LED_SetColor:
+ *
+ * Assign 8-bit values for the RGB elements of LED_rgb_array for the specified LED.
+ */
 void LED_SetColor( uint32_t _hex_color, led_number _led );
 
+/*
+ * LED_RefreshMatrixTask:
+ *
+ * Task to raster the 8 LED matrix, at a set interval.
+ * Fetches LED RGB values from LED_rgb_array.
+ * Two LEDs are set at a time.
+ */
 void LED_RefreshMatrixTask();
-
-void LED_SetPWM( uint8_t _anode );
 
 #endif /* LED_H_ */
