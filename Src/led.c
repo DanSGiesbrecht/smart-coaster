@@ -20,6 +20,8 @@
 
 #define LED_ON_TIME_MS      4
 
+// global variables
+//SemaphoreHandle_t led_mutex;
 
 // local variables
 
@@ -36,7 +38,7 @@ static TIM_HandleTypeDef    LED_tim2;
  * Changes the PWM duty cycles of the RGB LEDs for the specified anode.
  * Fetches duty cycle values from the LED_rgb_array.
  */
-static void LED_SetPWM( uint8_t _anode );
+static void LED_ChangePWM( uint8_t _anode );
 
 
 // public functions
@@ -69,8 +71,9 @@ void LED_Init( TIM_HandleTypeDef * _tim1, TIM_HandleTypeDef * _tim2 )
     HAL_TIM_PWM_Start( &LED_tim2, CATH5_TIM_CHANNEL );
 }
 
-void LED_SetColor( uint32_t _hex_color, led_number _led )
+void LED_SetColor( uint32_t _hex_color, uint8_t _led )
 {
+    xSemaphoreTake( led_mutex, portMAX_DELAY );
     switch( _led )
     {
         case LED0:
@@ -124,6 +127,7 @@ void LED_SetColor( uint32_t _hex_color, led_number _led )
         default:
         break;
     }
+    xSemaphoreGive( led_mutex );
 }
 
 void LED_RefreshMatrixTask()
@@ -142,28 +146,28 @@ void LED_RefreshMatrixTask()
         {
             case 0:
             HAL_GPIO_WritePin( ANODE3_GPIO_Port, ANODE3_Pin, ANODE_OFF );
-            LED_SetPWM( i );
+            LED_ChangePWM( i );
             HAL_GPIO_WritePin( ANODE0_GPIO_Port, ANODE0_Pin, ANODE_ON );
             i = ( i + 1) % 4;
             break;
 
             case 1:
             HAL_GPIO_WritePin( ANODE0_GPIO_Port, ANODE0_Pin, ANODE_OFF );
-            LED_SetPWM( i );
+            LED_ChangePWM( i );
             HAL_GPIO_WritePin( ANODE1_GPIO_Port, ANODE1_Pin, ANODE_ON );
             i = ( i + 1) % 4;
             break;
 
             case 2:
             HAL_GPIO_WritePin( ANODE1_GPIO_Port, ANODE1_Pin, ANODE_OFF );
-            LED_SetPWM( i );
+            LED_ChangePWM( i );
             HAL_GPIO_WritePin( ANODE2_GPIO_Port, ANODE2_Pin, ANODE_ON );
             i = ( i + 1) % 4;
             break;
 
             case 3:
             HAL_GPIO_WritePin( ANODE2_GPIO_Port, ANODE2_Pin, ANODE_OFF );
-            LED_SetPWM( i );
+            LED_ChangePWM( i );
             HAL_GPIO_WritePin( ANODE3_GPIO_Port, ANODE3_Pin, ANODE_ON );
             i = ( i + 1) % 4;
             break;
@@ -172,15 +176,39 @@ void LED_RefreshMatrixTask()
     }
 }
 
+void LED_AnimationTask()
+{
+    TickType_t begin_awake;
+
+    // Initialize tick time before entering for-loop.
+    // Only needs to be done manually once.
+    begin_awake = xTaskGetTickCount();
+
+    uint8_t i = 0;
+    uint32_t color = 0xff00ff;
+    for( ;; )
+    {
+        LED_SetColor( 0x000000, i);
+        i = (i+1)%8;
+        LED_SetColor( color, i );
+
+
+        vTaskDelayUntil( &begin_awake, pdMS_TO_TICKS( 50 ) );
+    }
+
+}
+
 
 // local functions
 
-static void LED_SetPWM( uint8_t _anode )
+static void LED_ChangePWM( uint8_t _anode )
 {
+    xSemaphoreTake( led_mutex, portMAX_DELAY );
     __HAL_TIM_SET_COMPARE( &LED_tim1, CATH0_TIM_CHANNEL, LED_rgb_array[_anode][0] );
     __HAL_TIM_SET_COMPARE( &LED_tim1, CATH1_TIM_CHANNEL, LED_rgb_array[_anode][1] );
     __HAL_TIM_SET_COMPARE( &LED_tim1, CATH2_TIM_CHANNEL, LED_rgb_array[_anode][2] );
     __HAL_TIM_SET_COMPARE( &LED_tim1, CATH3_TIM_CHANNEL, LED_rgb_array[_anode][3] );
     __HAL_TIM_SET_COMPARE( &LED_tim2, CATH4_TIM_CHANNEL, LED_rgb_array[_anode][4] );
     __HAL_TIM_SET_COMPARE( &LED_tim2, CATH5_TIM_CHANNEL, LED_rgb_array[_anode][5] );
+    xSemaphoreGive( led_mutex );
 }

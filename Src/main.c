@@ -66,6 +66,7 @@ osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 osThreadId ledTaskHandle;
+osThreadId animationTaskHandle;
 
 
 /* USER CODE END PV */
@@ -121,17 +122,18 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   LED_Init( &htim1, &htim2 );
-  LED_SetColor( 0xff0000, LED2 );
-  LED_SetColor( 0xffb600, LED3 );
-  LED_SetColor( 0xffff00, LED4 );
-  LED_SetColor( 0x00ff00, LED5 );
-  LED_SetColor( 0x00ffff, LED6 );
-  LED_SetColor( 0xff00ff, LED7 );
+  //LED_SetColor( 0xff0000, LED2 );
+  //LED_SetColor( 0xffb600, LED3 );
+  //LED_SetColor( 0xffff00, LED4 );
+  //LED_SetColor( 0x00ff00, LED5 );
+  //LED_SetColor( 0x00ffff, LED6 );
+  //LED_SetColor( 0xff00ff, LED7 );
 
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
+  led_mutex = xSemaphoreCreateMutex();
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -150,10 +152,14 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //xTaskCreate( LED_RefreshMatrixTask, "Task 1", 1000, NULL, 1, NULL );
-  osThreadDef( ledTask, LED_RefreshMatrixTask, osPriorityAboveNormal, 0, 128 );
-  ledTaskHandle = osThreadCreate( osThread( ledTask ), NULL );
+  if( led_mutex != NULL )
+  {
+      osThreadDef( ledTask, LED_RefreshMatrixTask, osPriorityAboveNormal, 0, 128 );
+      ledTaskHandle = osThreadCreate( osThread( ledTask ), NULL );
 
-
+      osThreadDef( animationTask, LED_AnimationTask, osPriorityNormal, 0, 128 );
+      animationTaskHandle = osThreadCreate( osThread( animationTask ), NULL );
+  }
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
