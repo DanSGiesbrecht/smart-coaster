@@ -52,7 +52,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
-#include "led.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -65,8 +65,6 @@ osThreadId defaultTaskHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-osThreadId ledTaskHandle;
-
 
 /* USER CODE END PV */
 
@@ -120,13 +118,6 @@ int main(void)
   MX_TIM2_Init();
 
   /* USER CODE BEGIN 2 */
-  LED_Init( &htim1, &htim2 );
-  LED_SetColor( 0xff0000, LED2 );
-  LED_SetColor( 0xffb600, LED3 );
-  LED_SetColor( 0xffff00, LED4 );
-  LED_SetColor( 0x00ff00, LED5 );
-  LED_SetColor( 0x00ffff, LED6 );
-  LED_SetColor( 0xff00ff, LED7 );
 
   /* USER CODE END 2 */
 
@@ -149,9 +140,6 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  //xTaskCreate( LED_RefreshMatrixTask, "Task 1", 1000, NULL, 1, NULL );
-  osThreadDef( ledTask, LED_RefreshMatrixTask, osPriorityAboveNormal, 0, 128 );
-  ledTaskHandle = osThreadCreate( osThread( ledTask ), NULL );
 
 
   /* USER CODE END RTOS_THREADS */
