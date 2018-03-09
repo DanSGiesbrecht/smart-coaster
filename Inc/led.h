@@ -17,7 +17,7 @@
 #define LED6    6
 #define LED7    7
 
-SemaphoreHandle_t led_mutex;
+osMutexId led_mutex;
 
 /*
  * LED_Init:
