@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -52,7 +52,9 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
+#include "UART.h"
 #include "led.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -122,6 +124,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   LED_Init( &htim1, &htim2 );
+  UART_Init( &huart1 );
 
   /* USER CODE END 2 */
 
@@ -442,7 +445,15 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+      if( UART_CheckSending() )
+      {
+          vTaskDelay( pdMS_TO_TICKS( 100 ) );
+      }
+      else
+      {
+          char* toSend = "hello world\r\n";
+          UART_Send( ( uint8_t* )toSend, strlen( toSend ) );
+      }
   }
   /* USER CODE END 5 */ 
 }
